@@ -1,6 +1,7 @@
 # [Background Auto Sync for Anki](https://github.com/athulkrishna2015/Background-Auto-Sync-for-Anki-Addon)
 
 Automatically syncs your Anki collection in the background — without stealing focus, raising windows, or interrupting your workflow.
+
 Install from anki [web](https://ankiweb.net/shared/info/226796325)
 
 This addon is a fork of [Auto-Sync-Anki-Addon by Robin-Haupt-1](https://github.com/Robin-Haupt-1/Auto-Sync-Anki-Addon).
