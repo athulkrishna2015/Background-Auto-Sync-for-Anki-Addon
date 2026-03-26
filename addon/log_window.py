@@ -48,7 +48,7 @@ class AutoSyncLogDialog(QDialog):
         grid.addWidget(self.log_output, 0, 0)
 
         self.setLayout(grid)
-        self.setWindowTitle('Auto Sync Log')
+        self.setWindowTitle('Background Auto Sync Log')
         self.setWindowIcon(get_auto_sync_icon())
         self.setMinimumWidth(750)
         self.refresh_log()

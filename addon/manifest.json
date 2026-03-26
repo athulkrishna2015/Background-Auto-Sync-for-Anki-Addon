@@ -1,8 +1,8 @@
 {
-  "name": "Auto Sync",
-  "package": "auto_sync",
-  "version": "2.0.0",
-  "human_version": "2.0.0",
+  "name": "Background Auto Sync",
+  "package": "background_auto_sync",
+  "version": "2.0.1",
+  "human_version": "2.0.1",
   "homepage": "",
   "conflicts": [],
   "min_point_version": 0

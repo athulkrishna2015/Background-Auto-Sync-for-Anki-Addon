@@ -19,6 +19,7 @@ from .constants import (
     get_auto_sync_icon,
 )
 from .log_window import AutoSyncLogDialog, LogManager
+from .support_dialog import SupportDialog
 
 
 class AutoSyncOptionsDialog(QDialog):
@@ -147,6 +148,12 @@ class AutoSyncOptionsDialog(QDialog):
         open_log_button.clicked.connect(lambda *args: self.on_log_dialog_call())
         open_log_button.setMaximumWidth(100)
 
+        # Support button
+        support_button = QPushButton()
+        support_button.setText("Support")
+        support_button.clicked.connect(lambda *args: self.on_support_dialog_call())
+        support_button.setMaximumWidth(100)
+
         # Close button
 
         close_button = QPushButton()
@@ -173,7 +180,12 @@ class AutoSyncOptionsDialog(QDialog):
         grid.addWidget(self.idle_before_sync_spinbox, 4, 1)
 
         grid.addWidget(open_log_button, 6, 0)
-        grid.addWidget(close_button, 6, 1)
+        
+        btn_layout = QHBoxLayout()
+        btn_layout.setContentsMargins(0, 0, 0, 0)
+        btn_layout.addWidget(support_button)
+        btn_layout.addWidget(close_button)
+        grid.addLayout(btn_layout, 6, 1)
 
         self.setLayout(grid)
 
@@ -189,6 +201,10 @@ class AutoSyncOptionsDialog(QDialog):
 
     def on_log_dialog_close(self):
         self.log_dialog_instance = None
+
+    def on_support_dialog_call(self):
+        dialog = SupportDialog(self)
+        dialog.exec()
 
     def closeEvent(self, a0: QCloseEvent) -> None:
         if self.log_dialog_instance:

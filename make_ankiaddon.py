@@ -13,7 +13,7 @@ from bump import (
 )
 
 # Configuration
-ADDON_NAME = "Auto_Sync"
+ADDON_NAME = "Background_Auto_Sync"
 ADDON_DIR = "addon"
 
 def artifact_names(

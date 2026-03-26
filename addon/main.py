@@ -45,7 +45,7 @@ def init():
 
     # add options entry to Anki menu
     if not _action_added:
-        options_action = QAction("Auto Sync Options ...", mw)
+        options_action = QAction("Background Auto Sync Options ...", mw)
         options_action.triggered.connect(on_menu_action)
         mw.form.menuTools.addAction(options_action)
         _action_added = True
@@ -68,3 +68,6 @@ def on_profile_will_close(*args):
 
 gui_hooks.profile_did_open.append(init)
 gui_hooks.profile_will_close.append(on_profile_will_close)
+
+# Wire up the Anki Add-on Manager's "Config" button
+mw.addonManager.setConfigAction(__name__.split('.')[0], on_menu_action)
