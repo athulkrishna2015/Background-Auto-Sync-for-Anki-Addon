@@ -34,6 +34,13 @@ class AutoSyncConfigManager:
         if not isinstance(current_config, dict):
             current_config = {}
 
+        # Migration for version 3: safer server defaults
+        if current_config.get(CONFIG_CONFIG_VERSION, 0) < 3:
+            current_config[CONFIG_IDLE_SYNC_TIMEOUT] = 60
+            current_config[CONFIG_SYNC_ON_CHANGE_ONLY] = True
+            current_config[CONFIG_IDLE_BEFORE_SYNC] = 10
+            current_config[CONFIG_CONFIG_VERSION] = 3
+
         # Merge default config into current config for any missing keys (migrations)
         self.config = self._sanitize_config(current_config)
 

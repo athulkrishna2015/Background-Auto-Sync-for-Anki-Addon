@@ -3,6 +3,7 @@ from aqt.qt import (
     QCloseEvent,
     QDialog,
     QGridLayout,
+    QHBoxLayout,
     QLabel,
     QPushButton,
     QSpinBox,

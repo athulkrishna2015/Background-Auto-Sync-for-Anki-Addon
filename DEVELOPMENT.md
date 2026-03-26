@@ -26,11 +26,11 @@ Configuration is stored in Anki's collection config under the key `auto_sync_con
 | Key | Type | Default | Description |
 |---|---|---|---|
 | `sync timeout` | int (minutes) | 1 | Inactivity timeout before sync |
-| `idle sync timeout` | int (minutes) | 10 | Periodic sync interval while idle |
+| `idle sync timeout` | int (minutes) | 60 | Periodic sync interval while idle |
 | `strictly avoid interruptions` | bool | true | Skip sync during reviews/dialogs/focus |
-| `sync on change only` | bool | false | Only sync when `col.mod` has changed |
-| `idle before sync` | int (minutes) | 2 | Idle wait after change before syncing |
-| `config version` | int | 2 | Config schema version |
+| `sync on change only` | bool | true | Only sync when `col.mod` has changed |
+| `idle before sync` | int (minutes) | 10 | Idle wait after change before syncing |
+| `config version` | int | 3 | Config schema version |
 
 ## Background Sync Architecture
 
