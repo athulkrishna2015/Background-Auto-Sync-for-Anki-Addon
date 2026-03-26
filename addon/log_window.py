@@ -1,6 +1,5 @@
-from aqt.qt import QDialog, QGridLayout, QTextEdit
-from PyQt6.QtGui import QCloseEvent
-from .constants import AUTO_SYNC_ICON
+from aqt.qt import QCloseEvent, QDialog, QGridLayout, QTextEdit
+from .constants import get_auto_sync_icon
 
 
 class LogManager:
@@ -13,7 +12,10 @@ class LogManager:
         self.log += line + "\n"
         # call the log dialog window to refresh it
         if self.log_dialog:
-            self.log_dialog.refresh_log()
+            try:
+                self.log_dialog.refresh_log()
+            except RuntimeError:
+                self.log_dialog = None
 
     def read(self):
         """Get all log entries seperated by \\n"""
@@ -23,12 +25,17 @@ class LogManager:
         """Register AutoSyncLogDialog instance to listen to log output"""
         self.log_dialog = log_dialog
 
+    def unregister(self, log_dialog):
+        """Stop sending updates to the provided dialog instance."""
+        if self.log_dialog is log_dialog:
+            self.log_dialog = None
+
 
 class AutoSyncLogDialog(QDialog):
     def __init__(self, log_manager: LogManager, parent):
-        super(AutoSyncLogDialog, self).__init__()
+        super(AutoSyncLogDialog, self).__init__(parent)
         self.log_manager = log_manager
-        self.parent = parent
+        self._options_dialog = parent
 
         # set up log TextEdit
         self.log_output = QTextEdit()
@@ -42,7 +49,7 @@ class AutoSyncLogDialog(QDialog):
 
         self.setLayout(grid)
         self.setWindowTitle('Auto Sync Log')
-        self.setWindowIcon(AUTO_SYNC_ICON)
+        self.setWindowIcon(get_auto_sync_icon())
         self.setMinimumWidth(750)
         self.refresh_log()
 
@@ -51,8 +58,10 @@ class AutoSyncLogDialog(QDialog):
 
     def refresh_log(self):
         """Refresh the log and scroll the TextEdit to the bottom"""
-        self.log_output.setText(self.log_manager.read())
+        self.log_output.setPlainText(self.log_manager.read())
         self.log_output.verticalScrollBar().setValue(self.log_output.verticalScrollBar().maximum())
 
     def closeEvent(self, a0: QCloseEvent) -> None:
-        self.parent.on_log_dialog_close()
+        self.log_manager.unregister(self)
+        self._options_dialog.on_log_dialog_close()
+        super().closeEvent(a0)

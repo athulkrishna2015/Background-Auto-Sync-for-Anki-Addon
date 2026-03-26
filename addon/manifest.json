@@ -1,0 +1,9 @@
+{
+  "name": "Auto Sync",
+  "package": "auto_sync",
+  "version": "2.0.0",
+  "human_version": "2.0.0",
+  "homepage": "",
+  "conflicts": [],
+  "min_point_version": 0
+}
