@@ -36,6 +36,7 @@ Go to **Tools → Background Auto Sync Options…** to configure:
 | **Wait idle before syncing after change** | 2 minutes | After detecting a change, wait this long idle before syncing |
 
 *Tip: You can restore these optimal defaults at any time using the **Reset Defaults** button in the options menu.*
+<img width="896" height="484" alt="Screenshot_20260326_194454" src="https://github.com/user-attachments/assets/8ffc01e1-c339-47c6-b764-ecf8ebeb0f5a" />
 
 ## Background Sync Behavior
 
