@@ -8,7 +8,7 @@ This addon is a fork of [Auto-Sync-Anki-Addon by Robin-Haupt-1](https://github.c
 
 - **True background sync** — If Anki is minimized, it stays minimized. If another app has focus, Anki won't steal it. The sync happens silently.
 - **Periodic sync** — Automatically syncs after a configurable period of inactivity (default: 1 minute after last interaction).
-- **Idle periodic sync** — While you're away, keeps syncing periodically (default: every 60 minutes) to pick up changes from AnkiWeb, mobile, or other devices.
+- **Idle periodic sync** — While you're away, keeps syncing periodically (default: Off) to pick up changes from AnkiWeb, mobile, or other devices.
 - **Change detection** — Optionally only sync when the collection has actually been modified (cards added, reviewed, edited). Stops wasting bandwidth when nothing changed (enabled by default).
 - **Idle-before-sync delay** — When a change is detected, waits for a configurable idle period before syncing, so it doesn't interrupt an active editing session (default: 10 minutes).
 - **Strictly avoid interruptions** — Won't sync while you're reviewing cards, browsing, or have any Anki dialog open (enabled by default).
@@ -29,7 +29,7 @@ Go to **Tools → Background Auto Sync Options…** to configure:
 | Option | Default | Description |
 |---|---|---|
 | **Sync after** | 1 minute | Minutes of inactivity before triggering a sync |
-| **When idle, sync every** | 60 minutes | Periodic sync interval while Anki is idle |
+| **When idle, sync every** | Off | Periodic sync interval while Anki is idle |
 | **Strictly avoid interruptions** | ✅ On | Skip sync during reviews, browsing, or when Anki has focus |
 | **Only sync when changes detected** | ✅ On | Skip idle periodic syncs if no local changes since last sync |
 | **Wait idle before syncing after change** | 10 minutes | After detecting a change, wait this long idle before syncing |

@@ -42,7 +42,10 @@ class AutoSyncOptionsDialog(QDialog):
 
     @staticmethod
     def _set_minutes_suffix(spinbox: QSpinBox, value: int):
-        spinbox.setSuffix(" minute" if value == 1 else " minutes")
+        if value == 0:
+            spinbox.setSuffix("")
+        else:
+            spinbox.setSuffix(" minute" if value == 1 else " minutes")
 
     def change_sync_timeout(self, value):
         self._set_minutes_suffix(self.sync_timeout_spinbox, value)
@@ -91,7 +94,8 @@ class AutoSyncOptionsDialog(QDialog):
 
         idle_sync_timeout_label = QLabel('When the program is idle, sync every')
         idle_sync_timeout_label.setToolTip('While you are not using Anki, the program will keep syncing in the background (in case you are using Anki on mobile or web and there are changes to sync)')
-        self.idle_sync_timeout_spinbox.setMinimum(1)
+        self.idle_sync_timeout_spinbox.setMinimum(0)
+        self.idle_sync_timeout_spinbox.setSpecialValueText("Off")
         self.idle_sync_timeout_spinbox.setAlignment(Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignTrailing | Qt.AlignmentFlag.AlignVCenter)
         self.idle_sync_timeout_spinbox.setValue(self.config.get(CONFIG_IDLE_SYNC_TIMEOUT))
         self._set_minutes_suffix(self.idle_sync_timeout_spinbox, self.idle_sync_timeout_spinbox.value())

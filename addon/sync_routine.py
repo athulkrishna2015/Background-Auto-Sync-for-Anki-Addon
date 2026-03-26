@@ -161,6 +161,13 @@ class SyncRoutine:
                 elif self.IDLE_BEFORE_SYNC > 0:
                     timeout = self.IDLE_BEFORE_SYNC
 
+            if not self.activity_since_sync and self.config.get(CONFIG_IDLE_SYNC_TIMEOUT) == 0:
+                self.log("Idle periodic sync is turned off. Waiting for user activity.")
+                self._set_user_activity_filter(True)
+                if self.sync_timer is not None:
+                    self.sync_timer.stop()
+                return
+
             self.log(f"Started sync timer, waiting for {timeout / 60000} minutes")
             self._set_user_activity_filter(True)
             # stop any old sync_timer timers and start a new one
@@ -284,8 +291,10 @@ class SyncRoutine:
         self.SYNC_TIMEOUT = max(self.SYNC_TIMEOUT, self.MINIMUM_TIMER_INTERVAL_MS)
         self.IDLE_BEFORE_SYNC = max(self.IDLE_BEFORE_SYNC, self.MINIMUM_TIMER_INTERVAL_MS)
 
+        idle_sync_text = "off" if self.config.get(CONFIG_IDLE_SYNC_TIMEOUT) == 0 else f"{self.SYNC_TIMEOUT_NO_ACTIVITY / 60000} min"
+
         self.log(f"Loaded config. Sync timeout: {self.SYNC_TIMEOUT / 60000} min, "
-                 f"idle sync timeout: {self.SYNC_TIMEOUT_NO_ACTIVITY / 60000} min. "
+                 f"idle sync timeout: {idle_sync_text}. "
                  f"Strictly avoid interruptions: {'on' if self.STRICTLY_AVOID_INTERRUPTIONS else 'off'}. "
                  f"Sync on change only: {'on' if self.SYNC_ON_CHANGE_ONLY else 'off'}. "
                  f"Idle before sync: {self.IDLE_BEFORE_SYNC / 60000} min")
