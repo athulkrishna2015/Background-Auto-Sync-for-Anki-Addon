@@ -34,13 +34,11 @@ Or install via AnkiWeb addon code (226796325).
 
 Go to **Tools → Background Auto Sync Options…** to configure:
 
-| Option | Default | Description |
-|---|---|---|
-| **Sync after** | 1 minute | Minutes of inactivity before triggering a sync *(disabled if Change mode is On)* |
-| **When idle, sync every** | Off | Periodic sync interval while Anki is idle *(disabled if Change mode is On)* |
-| **Strictly avoid interruptions** | ✅ On | Skip sync during reviews, browsing, or when Anki has focus |
-| **Only sync when changes detected** | ✅ On | Skip idle periodic syncs if no local changes since last sync |
-| **Wait idle before syncing after change** | 2 minutes | After detecting a change, wait this long idle before syncing |
+- **Sync after** (Default: 1 minute) — Minutes of inactivity before triggering a sync *(disabled if Change mode is On)*
+- **When idle, sync every** (Default: Off) — Periodic sync interval while Anki is idle *(disabled if Change mode is On)*
+- **Strictly avoid interruptions** (Default: ✅ On) — Skip sync during reviews, browsing, or when Anki has focus
+- **Only sync when changes detected** (Default: ✅ On) — Skip idle periodic syncs if no local changes since last sync
+- **Wait idle before syncing after change** (Default: 2 minutes) — After detecting a change, wait this long idle before syncing
 
 *Tip: You can restore these optimal defaults at any time using the **Reset Defaults** button in the options menu.*
 <img width="896" height="484" alt="Screenshot_20260326_194454" src="https://github.com/user-attachments/assets/8ffc01e1-c339-47c6-b764-ecf8ebeb0f5a" />
