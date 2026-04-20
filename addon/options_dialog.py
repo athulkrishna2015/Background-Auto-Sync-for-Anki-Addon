@@ -29,6 +29,7 @@ from .constants import (
     CONFIG_STRICTLY_AVOID_INTERRUPTIONS,
     CONFIG_SYNC_ON_CHANGE_ONLY,
     CONFIG_SYNC_TIMEOUT,
+    CONFIG_DISABLE_INTERNET_CHECK,
     get_auto_sync_icon,
 )
 from .log_window import LogManager
@@ -50,6 +51,7 @@ class AutoSyncOptionsDialog(QDialog):
         self.sync_on_change_only_checkbox = QCheckBox()
         self.idle_before_sync_spinbox = QSpinBox()
         self.strictly_avoid_interruptions_checkbox = QCheckBox()
+        self.disable_internet_check_checkbox = QCheckBox()
 
         self.setup_ui()
 
@@ -85,6 +87,10 @@ class AutoSyncOptionsDialog(QDialog):
     def change_idle_before_sync(self, value):
         self._set_minutes_suffix(self.idle_before_sync_spinbox, value)
         self.config.set(CONFIG_IDLE_BEFORE_SYNC, value)
+        self.sync_routine.reload_config()
+
+    def change_disable_internet_check(self, enabled):
+        self.config.set(CONFIG_DISABLE_INTERNET_CHECK, bool(enabled))
         self.sync_routine.reload_config()
 
     def setup_ui(self):
@@ -187,6 +193,18 @@ class AutoSyncOptionsDialog(QDialog):
         self.idle_before_sync_spinbox.valueChanged.connect(self.change_idle_before_sync)
         self.idle_before_sync_spinbox.setEnabled(self.config.get(CONFIG_SYNC_ON_CHANGE_ONLY))
 
+        # "Disable internet check" checkbox
+        disable_internet_check_label = QLabel("Disable pre-sync internet check")
+        disable_internet_check_tooltip = (
+            "When enabled, the addon will skip the connectivity check "
+            "and immediately attempt to sync."
+        )
+        disable_internet_check_label.setToolTip(disable_internet_check_tooltip)
+        self.disable_internet_check_checkbox.setToolTip(disable_internet_check_tooltip)
+        self.disable_internet_check_checkbox.setChecked(self.config.get(CONFIG_DISABLE_INTERNET_CHECK))
+        self.disable_internet_check_checkbox.toggled.connect(self.change_disable_internet_check)
+        disable_internet_check_label.mouseReleaseEvent = lambda *args: self.disable_internet_check_checkbox.toggle()
+
         # Reset Defaults button
         reset_button = QPushButton("Reset Defaults")
         reset_button.clicked.connect(self.on_reset_to_defaults_call)
@@ -210,11 +228,14 @@ class AutoSyncOptionsDialog(QDialog):
         grid.addWidget(idle_before_sync_label, 4, 0)
         grid.addWidget(self.idle_before_sync_spinbox, 4, 1)
 
+        grid.addWidget(disable_internet_check_label, 5, 0)
+        grid.addWidget(self.disable_internet_check_checkbox, 5, 1)
+
         reset_layout = QHBoxLayout()
         reset_layout.setContentsMargins(0, 0, 0, 0)
         reset_layout.addStretch()
         reset_layout.addWidget(reset_button)
-        grid.addLayout(reset_layout, 5, 1)
+        grid.addLayout(reset_layout, 6, 1)
 
         # Inline log display
         log_label = QLabel("Sync Log")
@@ -354,12 +375,14 @@ class AutoSyncOptionsDialog(QDialog):
         self.strictly_avoid_interruptions_checkbox.blockSignals(True)
         self.sync_on_change_only_checkbox.blockSignals(True)
         self.idle_before_sync_spinbox.blockSignals(True)
+        self.disable_internet_check_checkbox.blockSignals(True)
 
         self.sync_timeout_spinbox.setValue(self.config.get(CONFIG_SYNC_TIMEOUT))
         self.idle_sync_timeout_spinbox.setValue(self.config.get(CONFIG_IDLE_SYNC_TIMEOUT))
         self.strictly_avoid_interruptions_checkbox.setChecked(self.config.get(CONFIG_STRICTLY_AVOID_INTERRUPTIONS))
         self.sync_on_change_only_checkbox.setChecked(self.config.get(CONFIG_SYNC_ON_CHANGE_ONLY))
         self.idle_before_sync_spinbox.setValue(self.config.get(CONFIG_IDLE_BEFORE_SYNC))
+        self.disable_internet_check_checkbox.setChecked(self.config.get(CONFIG_DISABLE_INTERNET_CHECK))
 
         self.idle_before_sync_spinbox.setEnabled(self.config.get(CONFIG_SYNC_ON_CHANGE_ONLY))
         self.sync_timeout_spinbox.setEnabled(not self.config.get(CONFIG_SYNC_ON_CHANGE_ONLY))
@@ -370,6 +393,7 @@ class AutoSyncOptionsDialog(QDialog):
         self.strictly_avoid_interruptions_checkbox.blockSignals(False)
         self.sync_on_change_only_checkbox.blockSignals(False)
         self.idle_before_sync_spinbox.blockSignals(False)
+        self.disable_internet_check_checkbox.blockSignals(False)
 
         self.sync_routine.reload_config()
 

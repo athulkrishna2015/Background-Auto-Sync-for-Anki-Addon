@@ -9,6 +9,7 @@ from .constants import (
     CONFIG_IDLE_SYNC_TIMEOUT,
     CONFIG_IDLE_BEFORE_SYNC,
     CONFIG_CONFIG_VERSION,
+    CONFIG_DISABLE_INTERNET_CHECK,
 )
 
 
@@ -19,6 +20,7 @@ class AutoSyncConfigManager:
         {
             CONFIG_STRICTLY_AVOID_INTERRUPTIONS,
             CONFIG_SYNC_ON_CHANGE_ONLY,
+            CONFIG_DISABLE_INTERNET_CHECK,
         }
     )
 
@@ -43,6 +45,11 @@ class AutoSyncConfigManager:
             current_config[CONFIG_SYNC_ON_CHANGE_ONLY] = True
             current_config[CONFIG_IDLE_BEFORE_SYNC] = 2
             current_config[CONFIG_CONFIG_VERSION] = 4
+
+        # Migration for version 5: add option to disable internet check
+        if current_config.get(CONFIG_CONFIG_VERSION, 0) < 5:
+            current_config[CONFIG_DISABLE_INTERNET_CHECK] = False
+            current_config[CONFIG_CONFIG_VERSION] = 5
 
         # Merge default config into current config for any missing keys (migrations)
         self.config = self._sanitize_config(current_config)

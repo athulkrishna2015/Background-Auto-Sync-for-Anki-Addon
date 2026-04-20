@@ -9,6 +9,7 @@ from .constants import (
     CONFIG_STRICTLY_AVOID_INTERRUPTIONS,
     CONFIG_SYNC_ON_CHANGE_ONLY,
     CONFIG_SYNC_TIMEOUT,
+    CONFIG_DISABLE_INTERNET_CHECK,
 )
 from .utils import has_internet_connection
 from .log_window import LogManager
@@ -60,6 +61,7 @@ class SyncRoutine:
         self.STRICTLY_AVOID_INTERRUPTIONS: bool = None
         self.SYNC_ON_CHANGE_ONLY: bool = None
         self.IDLE_BEFORE_SYNC: int = None
+        self.DISABLE_INTERNET_CHECK: bool = None
         self.load_config()
 
         # start auto sync process
@@ -232,7 +234,7 @@ class SyncRoutine:
     def do_sync(self):
         """Force the app to sync the collection if there's an internet connection.
         Preserves window state so Anki never steals focus."""
-        if not has_internet_connection():
+        if not self.DISABLE_INTERNET_CHECK and not has_internet_connection():
             self.log(f"No internet connection, delaying sync for {self.SYNC_TIMEOUT / 60000} minutes")
             self.activity_since_sync = True  # shorten duration to next sync
             self.start_sync_timer()
@@ -325,6 +327,7 @@ class SyncRoutine:
         self.STRICTLY_AVOID_INTERRUPTIONS = self.config.get(CONFIG_STRICTLY_AVOID_INTERRUPTIONS)
         self.SYNC_ON_CHANGE_ONLY = self.config.get(CONFIG_SYNC_ON_CHANGE_ONLY)
         self.IDLE_BEFORE_SYNC = int((self.config.get(CONFIG_IDLE_BEFORE_SYNC) * 1000 * 60) - round(self.COUNTDOWN_TO_SYNC_TIMER_TIMEOUT / 2))
+        self.DISABLE_INTERNET_CHECK = self.config.get(CONFIG_DISABLE_INTERNET_CHECK)
 
         self.SYNC_TIMEOUT_NO_ACTIVITY = max(self.SYNC_TIMEOUT_NO_ACTIVITY, self.MINIMUM_TIMER_INTERVAL_MS)
         self.SYNC_TIMEOUT = max(self.SYNC_TIMEOUT, self.MINIMUM_TIMER_INTERVAL_MS)
@@ -336,7 +339,8 @@ class SyncRoutine:
                  f"idle sync timeout: {idle_sync_text}. "
                  f"Strictly avoid interruptions: {'on' if self.STRICTLY_AVOID_INTERRUPTIONS else 'off'}. "
                  f"Sync on change only: {'on' if self.SYNC_ON_CHANGE_ONLY else 'off'}. "
-                 f"Idle before sync: {self.IDLE_BEFORE_SYNC / 60000} min")
+                 f"Idle before sync: {self.IDLE_BEFORE_SYNC / 60000} min. "
+                 f"Disable internet check: {'on' if self.DISABLE_INTERNET_CHECK else 'off'}")
 
     def reload_config(self):
         """reload the config and restart the sync timer timeout"""
