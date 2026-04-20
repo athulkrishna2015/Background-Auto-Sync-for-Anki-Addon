@@ -65,6 +65,16 @@ The addon ensures syncs **never interrupt your work**:
 5. After sync completes, window state is restored exactly.
 6. The cycle restarts.
 
+## Support
+
+If you find this add-on useful, please consider supporting its development:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D01W6NQT)
+
+## License
+
+GPL-3.0 — see [LICENSE.txt](LICENSE.txt).
+
 ## Changelog
 
 ### 2026-04-20
@@ -85,12 +95,4 @@ The addon ensures syncs **never interrupt your work**:
 - **Bug Fix:** Fixed a startup `NameError` crash due to missing configuration variables.
 - **Documentation:** Major README refresh with explicit AnkiWeb installation instructions and UI behavior notes.
 
-## Support
 
-If you find this add-on useful, please consider supporting its development:
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/D1D01W6NQT)
-
-## License
-
-GPL-3.0 — see [LICENSE.txt](LICENSE.txt).
