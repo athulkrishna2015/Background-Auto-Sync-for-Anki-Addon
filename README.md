@@ -39,6 +39,7 @@ Go to **Tools → Background Auto Sync Options…** to configure:
 - **Strictly avoid interruptions** (Default: ✅ On) — Skip sync during reviews, browsing, or when Anki has focus
 - **Only sync when changes detected** (Default: ✅ On) — Skip idle periodic syncs if no local changes since last sync
 - **Wait idle before syncing after change** (Default: 2 minutes) — After detecting a change, wait this long idle before syncing
+- **Disable pre-sync internet check** (Default: ❌ Off) — Skip the connectivity check and trigger sync immediately (useful on extremely restrictive firewalls)
 
 *Tip: You can restore these optimal defaults at any time using the **Reset Defaults** button in the options menu.*
 <img width="896" height="484" alt="Screenshot_20260326_194454" src="https://github.com/user-attachments/assets/8ffc01e1-c339-47c6-b764-ecf8ebeb0f5a" />
@@ -63,6 +64,26 @@ The addon ensures syncs **never interrupt your work**:
 4. Sync triggers via Anki's built-in sync.
 5. After sync completes, window state is restored exactly.
 6. The cycle restarts.
+
+## Changelog
+
+### 2026-04-20
+- **Feature:** Added an option to completely disable the pre-sync internet connectivity check.
+- **Improved:** Switched the default internet connectivity ping to use HTTPS Port 443 instead of TCP Port 53, eliminating false-negative "offline" errors on strict corporate and university networks.
+
+### 2026-04-14
+- **Documentation:** Improved rendering compatibility for AnkiWeb by using standard bulleted lists.
+
+### 2026-03-27
+- **Documentation:** Added strict limitations to README regarding the Undo queue and multi-device sync conflicts.
+- **Support:** Added Ko-fi donation support links.
+
+### 2026-03-26
+- **Bug Fix:** Completely resolved the "focus stealing" issue where background syncs would interrupt your workflow by un-minimizing Anki or bringing it to the foreground.
+- **UI:** Added a "Reset to Defaults" button in the configuration menu.
+- **UI:** The settings menu now dynamically grays out and disables unused sync timers when "Change Only" mode is toggled.
+- **Bug Fix:** Fixed a startup `NameError` crash due to missing configuration variables.
+- **Documentation:** Major README refresh with explicit AnkiWeb installation instructions and UI behavior notes.
 
 ## Support
 
