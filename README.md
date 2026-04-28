@@ -77,6 +77,9 @@ GPL-3.0 — see [LICENSE.txt](LICENSE.txt).
 
 ## Changelog
 
+### 2026-04-28
+- **Bug Fix:** Fixed an issue where the background sync could crash the main Anki thread (`PoisonError`) if it encountered a network or server error during the sync process.
+
 ### 2026-04-20
 - **Feature:** Added an option to completely disable the pre-sync internet connectivity check.
 - **Improved:** Switched the default internet connectivity ping to use HTTPS Port 443 instead of TCP Port 53, eliminating false-negative "offline" errors on strict corporate and university networks.
