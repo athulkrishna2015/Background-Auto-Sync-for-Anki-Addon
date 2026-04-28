@@ -263,7 +263,6 @@ class SyncRoutine:
             return
 
         def on_future_done(fut):
-            mw.col._load_scheduler()
             try:
                 out = fut.result()
             except Exception as err:
@@ -273,6 +272,7 @@ class SyncRoutine:
                 gui_hooks.sync_did_finish()
                 return
 
+            mw.col._load_scheduler()
             mw.pm.set_host_number(out.host_number)
             if out.new_endpoint:
                 mw.pm.set_current_sync_url(out.new_endpoint)
