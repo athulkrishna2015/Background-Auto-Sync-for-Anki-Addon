@@ -290,27 +290,23 @@ class SyncRoutine:
             self._pre_sync_active_window = None
 
     def _restore_window_state(self):
-        """Restore the window state after sync to prevent focus stealing."""
+        """Undo window-state changes made during sync.
+
+        Never touches the Z-order: mw.lower() pushed the main window to the
+        very bottom, dropping it behind windows that sat below it before the
+        sync (#4). The headless sync raises nothing, so the original Z-order
+        is still intact and there is nothing to restore."""
         try:
             if self._pre_sync_was_minimized:
-                # Re-minimize if it was minimized before sync
-                mw.showMinimized()
+                if not mw.isMinimized():
+                    mw.showMinimized()
             elif self._pre_sync_was_hidden:
-                mw.hide()
-            elif self._pre_sync_active_window is not None and self._pre_sync_active_window != mw:
-                # Anki was not the active window — don't steal focus
-                # Lower the main window so it doesn't cover the previously active app
-                mw.lower()
-                # Try to re-activate the window that was active before sync
-                try:
-                    self._pre_sync_active_window.raise_()
-                    self._pre_sync_active_window.activateWindow()
-                except (RuntimeError, AttributeError):
-                    # The window may have been closed during sync
-                    pass
-            elif self._pre_sync_active_window is None:
-                # No Anki window was active — Anki was in background, keep it there
-                mw.lower()
+                if not mw.isHidden():
+                    mw.hide()
+            elif mw.isActiveWindow() and self._pre_sync_active_window not in (None, mw):
+                # The sync stole focus from another Anki window — hand it back
+                # without raising/lowering anything.
+                self._pre_sync_active_window.activateWindow()
         except Exception as e:
             self.log(f"Warning: could not restore window state: {e}")
 

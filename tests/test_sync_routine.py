@@ -213,6 +213,79 @@ class WindowStateRestoreGateTest(unittest.TestCase):
         restore.assert_not_called()
 
 
+class WindowStateRestoreTest(unittest.TestCase):
+    """Issue #4: restoring state must never change the Z-order."""
+
+    def setUp(self):
+        from aqt.qt import QApplication
+
+        self._prev_active = QApplication.active
+        QApplication.active = None
+        self._prev_returns = {
+            name: getattr(mw, name).return_value
+            for name in ("isActiveWindow", "isMinimized", "isHidden")
+        }
+        mw.reset_mock()
+
+    def tearDown(self):
+        from aqt.qt import QApplication
+
+        QApplication.active = self._prev_active
+        for name, value in self._prev_returns.items():
+            getattr(mw, name).return_value = value
+        mw.reset_mock()
+
+    def _visible_routine(self, active_window):
+        r = make_routine()
+        r._pre_sync_was_minimized = False
+        r._pre_sync_was_hidden = False
+        r._pre_sync_active_window = active_window
+        return r
+
+    def test_background_anki_never_lowered(self):
+        # Another app had focus before the sync -> Anki must stay where it was
+        r = self._visible_routine(None)
+        r._restore_window_state()
+        mw.lower.assert_not_called()
+        mw.raise_.assert_not_called()
+
+    def test_other_anki_window_never_lowered(self):
+        other = mock.Mock()
+        mw.isActiveWindow.return_value = True
+        r = self._visible_routine(other)
+        r._restore_window_state()
+        mw.lower.assert_not_called()
+        other.activateWindow.assert_called_once()
+
+    def test_no_focus_stolen_leaves_windows_alone(self):
+        other = mock.Mock()
+        mw.isActiveWindow.return_value = False
+        r = self._visible_routine(other)
+        r._restore_window_state()
+        other.activateWindow.assert_not_called()
+        mw.lower.assert_not_called()
+
+    def test_minimized_stays_minimized(self):
+        r = make_routine()
+        r._pre_sync_was_minimized = True
+        r._pre_sync_was_hidden = False
+        r._pre_sync_active_window = None
+        mw.isMinimized.return_value = False
+        r._restore_window_state()
+        mw.showMinimized.assert_called_once()
+        mw.lower.assert_not_called()
+
+    def test_hidden_stays_hidden(self):
+        r = make_routine()
+        r._pre_sync_was_minimized = False
+        r._pre_sync_was_hidden = True
+        r._pre_sync_active_window = None
+        mw.isHidden.return_value = False
+        r._restore_window_state()
+        mw.hide.assert_called_once()
+        mw.lower.assert_not_called()
+
+
 class FocusedIdleGraceTest(unittest.TestCase):
     def _routine(self, minutes):
         r = make_routine(config_extra={"idle sync focused timeout": minutes})
