@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [5.0.3] - 2026-09-25
+
+### Fixed
+- **Background sync no longer moves the Anki window backward in the Z-order.** The post-sync restore called `mw.lower()`, which dropped the main window to the very bottom of the stack, hiding it behind windows that had been below it. Restore now never raises or lowers anything: it only re-minimizes/re-hides if the sync actually changed that, and hands focus back to another Anki window if it was stolen ([#4](https://github.com/athulkrishna2015/Background-Auto-Sync-for-Anki-Addon/issues/4)).
+- **Window-restore tests** added for background, minimized, hidden, and focus-stolen cases.
+
+### Changed
+- **Dialog blocking is now unconditional** — auto-sync waits until the listed windows are closed instead of resuming after the grace timeout, which could fire a full sync mid-browsing and stall the UI on low-memory systems.
+
+## [5.0.2] - 2026-08-15
+
+### Added
+- **Support tab opens automatically** after the add-on is updated.
+
 ## [5.0.1] - 2026-08-15
 
 ### Fixed
